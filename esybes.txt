@@ -1,0 +1,12 @@
+Vilniaus Universitetas, MIF
+Džiugas Vyšniauskas
+Studento pažymėjimo numeris: s1310585
+
+Tema: virtualių aukcionų sistema
+
+Sistemos esybės:
+1) Aukcionas
+2) Vartotojas
+3) Sąskaita
+4) Prekė
+5) KainosSiūlymas (angl. "Bid")
