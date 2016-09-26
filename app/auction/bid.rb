@@ -9,6 +9,11 @@ class Bid
     Bid.new('', 0)
   end
 
+  def ==(other)
+    @user_id == other.user_id &&
+      @amount == other.amount
+  end
+
   attr_reader :user_id
   attr_reader :amount
 end

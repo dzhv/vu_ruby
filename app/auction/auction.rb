@@ -1,5 +1,6 @@
 require_relative('bid')
 require_relative('../errors/errors')
+require_relative('auction_price')
 
 # User created auction
 class Auction
@@ -7,18 +8,17 @@ class Auction
     @id = id
     @user_id = user_id
     @item = Item.new(auction_data[:item])
-    @starting_price = auction_data[:starting_price]
-    @buyout_price = auction_data[:buyout_price]
-    @end_date = auction_data[:end_date]
+    @price = AuctionPrice.new(
+      auction_data[:starting_price],
+      auction_data[:buyout_price]
+    )
     @current_bid = Bid.empty
   end
 
   attr_reader :id
   attr_reader :user_id
   attr_reader :item
-  attr_reader :starting_price
-  attr_reader :buyout_price
-  attr_reader :end_date
+  attr_reader :price
   attr_reader :current_bid
 
   def place_bid(user_id, bid_amount)

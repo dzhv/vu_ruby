@@ -17,7 +17,7 @@ describe Auction do
       end_date: Date.parse('2016-12-24')
     }
   }
-  subject(:auction) { Auction.new('id1', 'uid1', auction_data)}
+  subject(:auction) { Auction.new('id1', 'uid1', auction_data) }
 
   it 'does not allow lower amount bids' do
     auction.place_bid('uid2', 200)
