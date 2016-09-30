@@ -1,15 +1,15 @@
-# General non-internal user data
-class UserGeneralInfo
+require_relative 'user_name'
+
+# User contact information
+class ContactInformation
   def initialize(user_data)
-    @name = user_data[:name]
-    @surname = user_data[:surname]
+    @name = UserName.new(user_data)
     @email = user_data[:email]
     @address = user_data[:address]
     @tel_no = user_data[:tel_no]
   end
 
   attr_reader :name
-  attr_reader :surname
   attr_reader :email
   attr_reader :address
   attr_reader :tel_no

@@ -7,7 +7,7 @@ require_relative '../../app/auction/auction_repository'
 require('date')
 
 describe User do
-  subject(:user_data) {
+  let(:user_data) do
     {
       name: 'name',
       surname: 'surname',
@@ -15,12 +15,12 @@ describe User do
       address: 'address',
       tel_no: 'telephone'
     }
-  }
-  subject(:auction_repository) { AuctionRepository.new }
-  subject(:auction_manager) { AuctionManager.new(auction_repository) }
-  subject(:user_repository) { UserRepository.new }
-  subject(:user_manager) { UserManager.new(auction_manager, user_repository) }
-  subject(:user) { user_manager.sign_up user_data }
+  end
+  let(:auction_repository) { AuctionRepository.new }
+  let(:auction_manager) { AuctionManager.new(auction_repository) }
+  let(:user_repository) { UserRepository.new }
+  let(:user_manager) { UserManager.new(auction_manager, user_repository) }
+  let(:user) { user_manager.sign_up user_data }
 
   it 'is assigned an account' do
     expect(user.account).to be_a(Account)

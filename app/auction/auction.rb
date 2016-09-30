@@ -1,6 +1,6 @@
 require_relative('bid')
 require_relative('../errors/errors')
-require_relative('auction_price')
+require_relative('auction_sale_info')
 
 # User created auction
 class Auction
@@ -8,21 +8,21 @@ class Auction
     @id = id
     @user_id = user_id
     @item = Item.new(auction_data[:item])
-    @price = AuctionPrice.new(
+    @sale_info = AuctionSaleInfo.new(
       auction_data[:starting_price],
       auction_data[:buyout_price]
     )
-    @current_bid = Bid.empty
   end
 
   attr_reader :id
   attr_reader :user_id
   attr_reader :item
-  attr_reader :price
-  attr_reader :current_bid
+  attr_reader :sale_info
 
   def place_bid(user_id, bid_amount)
-    raise Errors.insufficient_bid_amount if bid_amount < current_bid.amount
-    @current_bid = Bid.new(user_id, bid_amount)
+    if bid_amount < sale_info.current_bid.amount
+      raise Errors.insufficient_bid_amount
+    end
+    @sale_info.place_bid(Bid.new(user_id, bid_amount))
   end
 end

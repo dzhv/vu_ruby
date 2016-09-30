@@ -28,12 +28,14 @@ class UserManager
   def place_bid(user_id, auction_id, amount)
     user = get_user(user_id)
     raise Error.insufficient_funds if amount > user.account.balance
-
     auction = @auction_manager.get_auction(auction_id)
-    current_bid = auction.current_bid
+    handle_bid_transactions(user, auction, amount)
+  end
 
-    @auction_manager.place_bid(user_id, auction_id, amount)
-    handle_user_finances(current_bid, user, amount)
+  def handle_bid_transactions(user, auction, bid_amount)
+    current_bid = auction.sale_info.current_bid
+    @auction_manager.place_bid(user.id, auction.id, bid_amount)
+    handle_user_finances(current_bid, user, bid_amount)
   end
 
   def handle_user_finances(previous_bid, bidder, bid_amount)

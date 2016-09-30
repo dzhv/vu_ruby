@@ -6,11 +6,11 @@ require_relative '../../app/auction/auction_manager'
 require_relative '../../app/auction/auction_repository'
 
 describe UserManager do
-  subject(:auction_repository) { AuctionRepository.new }
-  subject(:auction_manager) { AuctionManager.new(auction_repository) }
-  subject(:user_repository) { UserRepository.new }
-  subject(:user_manager) { UserManager.new(auction_manager, user_repository) }
-  subject(:user_data) {
+  let(:auction_repository) { AuctionRepository.new }
+  let(:auction_manager) { AuctionManager.new(auction_repository) }
+  let(:user_repository) { UserRepository.new }
+  let(:user_manager) { described_class.new(auction_manager, user_repository) }
+  let(:user_data) do
     {
       name: 'name',
       surname: 'surname',
@@ -18,62 +18,66 @@ describe UserManager do
       address: 'address',
       tel_no: 'telephone'
     }
-  }
-  subject(:user) { user_manager.sign_up(user_data) }
-  subject(:item_data) {
+  end
+  let(:auction_owner) { user_manager.sign_up(user_data) }
+  let(:first_bidder) { user_manager.sign_up(user_data) }
+  let(:second_bidder) { user_manager.sign_up(user_data) }
+  let(:item_data) do
     {
       name: 'item',
       description: 'description',
       condition: 9
     }
-  }
-  subject(:auction_data) {
+  end
+  let(:auction_data) do
     {
       item: item_data,
       starting_price: 100,
       buyout_price: 150,
       end_date: Date.parse('2016-12-24')
     }
-  }
-
-  it 'sign up data is persisted' do
-    info = user.general_info
-    expect(info.name).to equal(user_data[:name])
-    expect(info.surname).to equal(user_data[:surname])
-    expect(info.email).to equal(user_data[:email])
-    expect(info.address).to equal(user_data[:address])
-    expect(info.tel_no).to equal(user_data[:tel_no])
+  end
+  let(:auction) do
+    auction_manager.create_auction(auction_owner.id, auction_data)
   end
 
-  it 'can handle user bid' do
-    auction_owner = user_manager.sign_up user_data
-    bidder = user_manager.sign_up user_data
-    user_manager.add_money(bidder.id, 100)
-    auction = auction_manager.create_auction(auction_owner.id, auction_data)
+  it 'can sign up a user' do
+    user = user_manager.sign_up(user_data)
+    expect(user.contact_info).to have_attributes(
+      name: eq(UserName.new(user_data)),
+      email: user_data[:email],
+      address: user_data[:address],
+      tel_no: user_data[:tel_no]
+    )
+  end
 
-    user_manager.place_bid(bidder.id, auction.id, 50)
+  before(:each) do
+    user_manager.add_money(first_bidder.id, 100)
+    user_manager.add_money(second_bidder.id, 200)
+    user_manager.place_bid(first_bidder.id, auction.id, 50)
+  end
 
-    bidder = user_manager.get_user(bidder.id)
-    auction = auction_manager.get_auction(auction.id)
-    expect(bidder.account.balance).to eq(50)
-    expect(auction.current_bid.user_id).to eq(bidder.id)
-    expect(auction.current_bid.amount).to eq(50)
+  context 'on first auction bid' do
+    it 'reduces bidder account balance' do
+      bidder = user_manager.get_user(first_bidder.id)
+      expect(bidder.account.balance).to eq(50)
+    end
+
+    it 'places the bid on auction' do
+      bidded_auction = auction_manager.get_auction(auction.id)
+      expect(bidded_auction.sale_info.current_bid).to have_attributes(
+        user_id: first_bidder.id,
+        amount: 50
+      )
+    end
   end
 
   it 'returns money for overthrown bidder' do
-    first_bidder = user_manager.sign_up user_data
-    second_bidder = user
-    user_manager.add_money(first_bidder.id, 100)
     user_manager.add_money(second_bidder.id, 200)
 
-    auction = auction_manager.create_auction('', auction_data)
-    user_manager.place_bid(first_bidder.id, auction.id, 100)
     user_manager.place_bid(second_bidder.id, auction.id, 200)
 
-    first_bidder = user_manager.get_user(first_bidder.id)
-    second_bidder = user_manager.get_user(second_bidder.id)
-
-    expect(first_bidder.account.balance).to eq(100)
-    expect(second_bidder.account.balance).to eq(0)
+    overthrown_bidder = user_manager.get_user(first_bidder.id)
+    expect(overthrown_bidder.account.balance).to eq(100)
   end
 end

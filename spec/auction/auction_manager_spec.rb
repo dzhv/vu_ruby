@@ -2,27 +2,27 @@ require_relative '../spec_helper'
 require_relative '../../app/auction/auction_manager'
 
 describe AuctionManager do
-  subject(:auction_repository) { AuctionRepository.new }
-  subject(:auction_manager) { AuctionManager.new(auction_repository) }
-  subject(:item_data) {
+  let(:auction_repository) { AuctionRepository.new }
+  let(:auction_manager) { described_class.new(auction_repository) }
+  let(:item_data) do
     {
       name: 'item',
       description: 'description',
       condition: 9
     }
-  }
-  subject(:auction_data) {
+  end
+  let(:auction_data) do
     {
       item: item_data,
       starting_price: 100,
       buyout_price: 150,
       end_date: Date.parse('2016-12-24')
     }
-  }
+  end
+  let(:user1_id) { '1' }
+  let(:user2_id) { '2' }
 
   it 'can list user auctions' do
-    user1_id = '1'
-    user2_id = '2'
     auction1 = auction_manager.create_auction(user1_id, auction_data)
     auction2 = auction_manager.create_auction(user1_id, auction_data)
     auction_manager.create_auction(user2_id, auction_data)
@@ -32,11 +32,15 @@ describe AuctionManager do
     expect(auctions).to eq([auction1, auction2])
   end
 
-  it 'auction data is persisted' do
-    user_id = '1'
-    auction = auction_manager.create_auction(user_id, auction_data)
-    expect(auction.item).to eq(Item.new(auction_data[:item]))
-    expect(auction.price.starting_price).to eq(auction_data[:starting_price])
-    expect(auction.price.buyout_price).to eq(auction_data[:buyout_price])
+  it 'can create auction' do
+    auction = auction_manager.create_auction(user1_id, auction_data)
+
+    expect(auction).to have_attributes(
+      item: Item.new(auction_data[:item]),
+      sale_info: AuctionSaleInfo.new(
+        auction_data[:starting_price],
+        auction_data[:buyout_price]
+      )
+    )
   end
 end
