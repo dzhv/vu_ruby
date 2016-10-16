@@ -8,7 +8,7 @@ require_relative '../../app/auction/auction_repository'
 describe UserManager do
   let(:auction_repository) { AuctionRepository.new }
   let(:auction_manager) { AuctionManager.new(auction_repository) }
-  let(:user_repository) { UserRepository.new }
+  let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:user_manager) { described_class.new(auction_manager, user_repository) }
   let(:user_data) do
     {
@@ -80,4 +80,13 @@ describe UserManager do
     overthrown_bidder = user_manager.get_user(first_bidder.id)
     expect(overthrown_bidder.account.balance).to eq(100)
   end
+
+  # it 'handles an auction buyout' do
+  #   user = first_bidder
+  #   user_manager.add_money(user.id, 200)
+
+  #   user_manager.handle_buyout(user.id, auction.id)
+
+  #   expect(user.account.balance).to eq(200 - auction_data[:buyout_price])
+  # end
 end

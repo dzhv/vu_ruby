@@ -1,2 +1,11 @@
 coverage/*
 .rspec
+*.yml
+Reikalavimu atsekamumas.txt
+.gitignore.save
+.gitignore.save1
+..gitignore.swp
+.gitignore.save.1
+Uzd 3 Reikalavimai.txt
+coverage/assets
+coverage/index.html

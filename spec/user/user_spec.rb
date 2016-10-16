@@ -18,7 +18,7 @@ describe User do
   end
   let(:auction_repository) { AuctionRepository.new }
   let(:auction_manager) { AuctionManager.new(auction_repository) }
-  let(:user_repository) { UserRepository.new }
+  let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:user_manager) { UserManager.new(auction_manager, user_repository) }
   let(:user) { user_manager.sign_up user_data }
 

@@ -21,4 +21,8 @@ class User
   def withdraw_money(amount)
     @account.withdraw(amount)
   end
+
+  def ==(other)
+    @id == other.id
+  end
 end
