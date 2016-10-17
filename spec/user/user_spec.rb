@@ -16,7 +16,7 @@ describe User do
       tel_no: 'telephone'
     }
   end
-  let(:auction_repository) { AuctionRepository.new }
+  let(:auction_repository) { AuctionRepository.new('test_auctiions.yml') }
   let(:auction_manager) { AuctionManager.new(auction_repository) }
   let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:user_manager) { UserManager.new(auction_manager, user_repository) }

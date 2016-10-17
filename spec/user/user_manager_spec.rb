@@ -6,7 +6,7 @@ require_relative '../../app/auction/auction_manager'
 require_relative '../../app/auction/auction_repository'
 
 describe UserManager do
-  let(:auction_repository) { AuctionRepository.new }
+  let(:auction_repository) { AuctionRepository.new('test_auctions.yml') }
   let(:auction_manager) { AuctionManager.new(auction_repository) }
   let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:user_manager) { described_class.new(auction_manager, user_repository) }

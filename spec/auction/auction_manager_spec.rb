@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 require_relative '../../app/auction/auction_manager'
 
 describe AuctionManager do
-  let(:auction_repository) { AuctionRepository.new }
+  let(:auction_repository) { AuctionRepository.new('test_auctions.yml') }
   let(:auction_manager) { described_class.new(auction_repository) }
   let(:item_data) do
     {

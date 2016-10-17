@@ -1,6 +1,6 @@
 describe UserRepository do
   let(:file_name) { 'test_users.yml' }
-  let(:repository) { UserRepository.new(file_name) }
+  let(:repository) { described_class.new(file_name) }
   let(:user_data) do
     {
       name: 'name',
@@ -22,7 +22,7 @@ describe UserRepository do
   end
 
   it 'saves data externally' do
-    repository = UserRepository.new(file_name)
+    repository = described_class.new(file_name)
     expect(repository.all_users).not_to be_empty
   end
 

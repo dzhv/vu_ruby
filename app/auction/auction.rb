@@ -25,4 +25,8 @@ class Auction
     end
     @sale_info.place_bid(Bid.new(user_id, bid_amount))
   end
+
+  def ==(other)
+    @id == other.id
+  end
 end
