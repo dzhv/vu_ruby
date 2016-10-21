@@ -4,12 +4,16 @@ require_relative '../../app/user/user'
 require_relative '../../app/user/user_repository'
 require_relative '../../app/auction/auction_manager'
 require_relative '../../app/auction/auction_repository'
+require_relative '../../app/authentication/authentication'
+require_relative '../../app/authentication/auth_repository'
 
 describe UserManager do
   let(:auction_repository) { AuctionRepository.new('test_auctions.yml') }
   let(:auction_manager) { AuctionManager.new(auction_repository) }
   let(:user_repository) { UserRepository.new('test_users.yml') }
-  let(:user_manager) { described_class.new(auction_manager, user_repository) }
+  let(:user_manager) do
+    described_class.new(auction_manager, user_repository, authentication)
+  end
   let(:user_data) do
     {
       name: 'name',
@@ -19,9 +23,15 @@ describe UserManager do
       tel_no: 'telephone'
     }
   end
-  let(:auction_owner) { user_manager.sign_up(user_data) }
-  let(:first_bidder) { user_manager.sign_up(user_data) }
-  let(:second_bidder) { user_manager.sign_up(user_data) }
+  let(:login_data) do
+    {
+      username: 'username',
+      password: 'password'
+    }
+  end
+  let(:auction_owner) { user_manager.sign_up(user_data, login_data) }
+  let(:first_bidder) { user_manager.sign_up(user_data, login_data) }
+  let(:second_bidder) { user_manager.sign_up(user_data, login_data) }
   let(:item_data) do
     {
       name: 'item',
@@ -40,14 +50,27 @@ describe UserManager do
   let(:auction) do
     auction_manager.create_auction(auction_owner.id, auction_data)
   end
+  let(:authentication) do
+    Authentication.new(AuthRepository.new('test_login.yml'))
+  end
 
   it 'can sign up a user' do
-    user = user_manager.sign_up(user_data)
+    user = user_manager.sign_up(user_data, login_data)
     expect(user.contact_info).to have_attributes(
       name: eq(UserName.new(user_data)),
       email: user_data[:email],
       address: user_data[:address],
       tel_no: user_data[:tel_no]
+    )
+  end
+
+  it 'creates login data for user' do
+    user = user_manager.sign_up(user_data, login_data)
+    login = authentication.get_login(user.id)
+    expect(login).to have_attributes(
+      username: login_data[:username],
+      password: login_data[:password],
+      user_id: user.id
     )
   end
 

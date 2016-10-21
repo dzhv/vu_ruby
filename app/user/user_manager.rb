@@ -3,16 +3,21 @@ require 'securerandom'
 
 # manages actionss with system users
 class UserManager
-  def initialize(auction_manager, user_repository)
+  def initialize(auction_manager, user_repository, authentication)
     @auction_manager = auction_manager
     @user_repository = user_repository
+    @authentication = authentication
   end
 
-  def sign_up(user_data)
+  def sign_up(user_data, login_data)
     id = SecureRandom.uuid
     user = User.new(id, user_data)
+    @authentication.create_login(
+      user,
+      login_data[:username],
+      login_data[:password]
+    )
     @user_repository.save_user(user)
-    user
   end
 
   def get_user(user_id)

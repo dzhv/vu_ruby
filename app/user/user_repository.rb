@@ -10,6 +10,7 @@ class UserRepository
     users = all_users
     users.delete(user)
     File.open(@file_name, 'w') { |file| file.write(users.push(user).to_yaml) }
+    user
   end
 
   def get_user(user_id)
