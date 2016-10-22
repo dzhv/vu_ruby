@@ -14,7 +14,6 @@ describe User do
       name: 'name',
       surname: 'surname',
       email: 'email',
-      address: 'address',
       tel_no: 'telephone'
     }
   end

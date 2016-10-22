@@ -19,7 +19,6 @@ describe UserManager do
       name: 'name',
       surname: 'surname',
       email: 'email',
-      address: 'address',
       tel_no: 'telephone'
     }
   end
@@ -59,7 +58,6 @@ describe UserManager do
     expect(user.contact_info).to have_attributes(
       name: eq(UserName.new(user_data)),
       email: user_data[:email],
-      address: user_data[:address],
       tel_no: user_data[:tel_no]
     )
   end

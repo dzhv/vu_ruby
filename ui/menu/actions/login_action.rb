@@ -3,15 +3,14 @@ require_relative('../../../app/errors/errors')
 
 # Handles user login
 class LoginAction
-  def initialize(authentication_controller, user_session)
+  def initialize(authentication_controller)
     @auth_controller = authentication_controller
-    @user_session = user_session
   end
 
   def perform
     username = read_username
     password = read_password
-    @user_session = @auth_controller.authenticate(username, password)
+    return @auth_controller.authenticate(username, password)
   rescue Errors::WrongCredentialsError
     retry_login
   end
