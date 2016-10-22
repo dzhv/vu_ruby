@@ -7,7 +7,7 @@ class BaseMenu
   def validate_input(input)
     input_is_valid = input_is_valid(input)
     repeat_read unless input_is_valid
-    actions[Integer(input)] if input_is_valid
+    return Integer(input) if input_is_valid
   end
 
   def repeat_read

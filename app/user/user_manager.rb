@@ -13,7 +13,7 @@ class UserManager
     id = SecureRandom.uuid
     user = User.new(id, user_data)
     @authentication.create_login(
-      user,
+      user.id,
       login_data[:username],
       login_data[:password]
     )

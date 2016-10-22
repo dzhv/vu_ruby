@@ -18,6 +18,6 @@ describe AuthRepository do
 
   it 'saves data externally' do
     repository = described_class.new(file_name)
-    expect(repository.get_login(user_id)).to eq(login)
+    expect(repository.get_user_login(user_id)).to eq(login)
   end
 end

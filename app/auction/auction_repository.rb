@@ -1,3 +1,5 @@
+require('yaml')
+
 # Auction storage class
 class AuctionRepository
   def initialize(file_name)

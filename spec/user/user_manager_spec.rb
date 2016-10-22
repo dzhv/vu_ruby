@@ -66,7 +66,7 @@ describe UserManager do
 
   it 'creates login data for user' do
     user = user_manager.sign_up(user_data, login_data)
-    login = authentication.get_login(user.id)
+    login = authentication.get_user_login(user.id)
     expect(login).to have_attributes(
       username: login_data[:username],
       password: login_data[:password],

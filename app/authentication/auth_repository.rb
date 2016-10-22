@@ -1,11 +1,21 @@
+require('yaml')
+
 # Handles login storage
 class AuthRepository
   def initialize(file_name)
     @file_name = file_name
   end
 
-  def get_login(user_id)
-    all_logins.find { |login| login.user_id == user_id }
+  def get_user_login(user_id)
+    all_logins.find do |login|
+      login.user_id == user_id
+    end
+  end
+
+  def get_login(username, password)
+    all_logins.find(-> { raise Errors::NotFoundError }) do |login|
+      login.username == username && login.password == password
+    end
   end
 
   def save_login(login)
