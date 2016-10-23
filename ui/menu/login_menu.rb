@@ -6,8 +6,9 @@ require_relative('base_menu')
 class LoginMenu < BaseMenu
   def initialize(authentication_controller, user_controller)
     @actions = [
-      LoginAction.new(authentication_controller),
-      SignUpAction.new(user_controller)
+      -> { exit },
+      -> { login(authentication_controller) },
+      -> { sign_up(user_controller) }
     ]
   end
 
@@ -15,6 +16,15 @@ class LoginMenu < BaseMenu
     puts '1 - Login'
     puts '2 - Sign up'
     puts '0 - Exit'
-    @actions[read_input - 1].perform
+    @actions[read_input].call
+  end
+
+  def login(authentication_controller)
+    LoginAction.new(authentication_controller).perform
+  end
+
+  def sign_up(user_controller)
+    SignUpAction.new(user_controller).perform
+    show
   end
 end
