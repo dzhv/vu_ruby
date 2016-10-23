@@ -4,6 +4,7 @@ require_relative('../user/user_manager')
 require_relative('../user/user_repository')
 require_relative('../auction/auction_repository')
 require_relative('../auction/auction_manager')
+require_relative('../finance/bid_manager')
 
 # Handles frontend-backend calls related to user actions
 class UserController
@@ -16,6 +17,7 @@ class UserController
       user_repository,
       authentication
     )
+    @bid_manager = BidManager.new(@user_manager, @auction_manager)
   end
 
   def sign_up(user_data, login_data)
@@ -32,6 +34,11 @@ class UserController
 
   def place_bid(auction_number, user_id, bid_amount)
     auction_id = @auction_manager.get_auction_by_number(auction_number).id
-    @user_manager.place_bid(user_id, auction_id, bid_amount)
+    @bid_manager.place_bid(user_id, auction_id, bid_amount)
+  end
+
+  def buyout_auction(auction_number, user_id)
+    auction_id = @auction_manager.get_auction_by_number(auction_number).id
+    @bid_manager.handle_buyout(user_id, auction_id)
   end
 end

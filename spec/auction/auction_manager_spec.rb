@@ -36,29 +36,39 @@ describe AuctionManager do
   end
 
   context 'when auctions are retrieved' do
+    let(:auctions_before) { auction_manager.all_auctions }
+    let(:auction1) { auction_manager.create_auction(user1_id, auction_data) }
+    let(:auction2) { auction_manager.create_auction(user1_id, auction_data) }
+    let(:auction3) { auction_manager.create_auction(user2_id, auction_data) }
+
     before(:each) do
-      @auctions_before = auction_manager.all_auctions
-      @auction1 = auction_manager.create_auction(user1_id, auction_data)
-      @auction2 = auction_manager.create_auction(user1_id, auction_data)
-      @auction3 = auction_manager.create_auction(user2_id, auction_data)
+      auctions_before
+      auction1
+      auction2
+      auction3
     end
 
     it 'can list user auctions' do
       auctions = auction_manager.get_auctions(user1_id)
-      expect(auctions).to eq([@auction1, @auction2])
+      expect(auctions).to eq([auction1, auction2])
     end
 
     it 'can get all auctions' do
       all_auctions = auction_manager.all_auctions
       expect(all_auctions).to match_array(
-        @auctions_before.concat([@auction1, @auction2, @auction3])
+        auctions_before.concat([auction1, auction2, auction3])
       )
     end
 
     it 'can get auction by its number' do
       number_of_auctions = auction_manager.all_auctions.length
       auction = auction_manager.get_auction_by_number(number_of_auctions - 1)
-      expect(auction).to eq(@auction3)
+      expect(auction).to eq(auction3)
+    end
+
+    it 'does not retrieve bought auctions' do
+      auction_manager.buyout_auction(auction1.id)
+      expect(auction_manager.all_auctions).not_to include(auction1)
     end
   end
 end

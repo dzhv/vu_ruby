@@ -22,7 +22,7 @@ class AuctionManager
   end
 
   def all_auctions
-    @auction_repository.all_auctions
+    @auction_repository.all_open_auctions
   end
 
   def place_bid(user_id, auction_id, bid_amount)
@@ -33,5 +33,11 @@ class AuctionManager
 
   def get_auction_by_number(number)
     @auction_repository.get_auction_by_number(number)
+  end
+
+  def buyout_auction(auction_id)
+    auction = get_auction(auction_id)
+    auction.buyout
+    @auction_repository.save_auction(auction)
   end
 end

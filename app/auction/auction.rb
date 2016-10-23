@@ -27,6 +27,10 @@ class Auction
     @sale_info.place_bid(Bid.new(user_id, bid_amount))
   end
 
+  def buyout
+    @sale_info.mark_as_bought
+  end
+
   def ==(other)
     @id == other.id
   end

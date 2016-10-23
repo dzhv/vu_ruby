@@ -1,5 +1,6 @@
 require_relative '../spec_helper'
 require_relative '../../app/auction/auction'
+require_relative '../../app/auction/bid'
 
 describe Auction do
   let(:item_data) do
@@ -23,5 +24,11 @@ describe Auction do
     expect do
       auction.place_bid('uid3', 150)
     end.to raise_error(Errors.insufficient_bid_amount)
+  end
+
+  it 'removes current bid on buyout' do
+    auction.place_bid('uid2', 200)
+    auction.buyout
+    expect(auction.sale_info.current_bid).to eq(Bid.empty)
   end
 end

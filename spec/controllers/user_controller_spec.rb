@@ -40,39 +40,43 @@ describe UserController do
       password: SecureRandom.uuid
     }
   end
-
+  let(:user) { user_controller.sign_up(user_data, login_data) }
+  let(:increase_amount) { 200 }
   before(:each) do
-    @user = user_controller.sign_up(user_data, login_data)
+    user_controller.add_money(user.id, increase_amount)
+    auction_controller.put_auction(user.id, auction_data)
   end
 
   it 'allows user to get his profile' do
-    actual_user = user_controller.get_user(@user.id)
+    actual_user = user_controller.get_user(user.id)
     expect(actual_user).to have_attributes(
-      id: @user.id,
+      id: user.id,
       contact_info: ContactInformation.new(user_data)
     )
   end
 
   it 'initiates user account balance increase' do
-    initial_balance = @user.account.balance
-    increase_amount = 100
-    user_controller.add_money(@user.id, increase_amount)
-    actual_user = user_controller.get_user(@user.id)
-    expect(actual_user.account.balance).to eq(
+    initial_balance = user.account.balance
+    incrased_user = user_controller.get_user(user.id)
+    expect(incrased_user.account.balance).to eq(
       initial_balance + increase_amount
     )
   end
 
   it 'initiates bid placement' do
-    user_controller.add_money(@user.id, 200)
-    auction_controller.put_auction(@user.id, auction_data)
     auction_number = auction_controller.all_auctions.length - 1
-    user_controller.place_bid(auction_number, @user.id, 100)
+    user_controller.place_bid(auction_number, user.id, 100)
     auction = auction_controller.get_auction_by_number(auction_number)
-
     expect(auction.sale_info.current_bid).to have_attributes(
-      user_id: @user.id,
+      user_id: user.id,
       amount: 100
     )
+  end
+
+  it 'initiates buyout' do
+    auction_number = auction_controller.all_auctions.length - 1
+    auction = auction_controller.get_auction_by_number(auction_number)
+    user_controller.buyout_auction(auction_number, user.id)
+    expect(auction_controller.all_auctions).not_to include(auction)
   end
 end

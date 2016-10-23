@@ -39,17 +39,18 @@ describe AuctionController do
       buyout_price: 150
     }
   end
+  let(:user_id) { user_controller.sign_up(user_data, login_data).id }
+  let(:auctions_before) { auction_controller.all_auctions }
+  let(:auction) { auction_controller.get_auctions(user_id).first }
 
   before(:each) do
-    @auctions_before = auction_controller.all_auctions
-    @user_id = user_controller.sign_up(user_data, login_data).id
-    auction_controller.put_auction(@user_id, auction_data)
-    @auction = auction_controller.get_auctions(@user_id).first
+    auctions_before
+    auction_controller.put_auction(user_id, auction_data)
   end
 
   it 'can request auction creation' do
-    expect(@auction).to have_attributes(
-      user_id: @user_id,
+    expect(auction).to have_attributes(
+      user_id: user_id,
       item: Item.new(auction_data[:item]),
       sale_info: AuctionSaleInfo.new(
         auction_data[:starting_price],
@@ -60,11 +61,11 @@ describe AuctionController do
 
   it 'can request all auctions' do
     auctions = auction_controller.all_auctions
-    expect(auctions).to match_array(@auctions_before.concat([@auction]))
+    expect(auctions).to match_array(auctions_before.concat([auction]))
   end
 
   it 'can request auction by number' do
-    auction_controller.put_auction(@user_id, auction_data)
+    auction_controller.put_auction(user_id, auction_data)
     all_auctions = auction_controller.all_auctions
     expected_auction = all_auctions.last
     actual_auction =

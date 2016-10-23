@@ -24,7 +24,13 @@ class AuctionRepository
   end
 
   def get_auction_by_number(number)
-    all_auctions[number]
+    all_open_auctions[number]
+  end
+
+  def all_open_auctions
+    all_auctions.select do |auction|
+      !auction.sale_info.bought
+    end
   end
 
   def all_auctions
