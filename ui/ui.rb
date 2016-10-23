@@ -9,9 +9,13 @@ require_relative('../app/controllers/auction_controller')
 class UI
   def initialize
     @session = UserSession.empty
-    @auth_controller = AuthController.new
-    @user_controller = UserController.new
-    @auction_controller = AuctionController.new
+    @auth_controller = AuthController.new('logins.yml')
+    @user_controller = UserController.new(
+      'users.yml',
+      'auctions.yml',
+      'logins.yml'
+    )
+    @auction_controller = AuctionController.new('auctions.yml')
   end
 
   def start_ui

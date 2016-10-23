@@ -1,14 +1,16 @@
 require 'io/console'
 require_relative('../../../app/errors/errors')
+require_relative('action')
 
 # Handles user login
-class LoginAction
+class LoginAction < Action
   def initialize(authentication_controller)
     @auth_controller = authentication_controller
+    @name = 'Login'
   end
 
   def perform
-    username = read_username
+    username = read_value('username')
     password = read_password
     return @auth_controller.authenticate(username, password)
   rescue Errors::WrongCredentialsError
@@ -18,15 +20,5 @@ class LoginAction
   def retry_login
     puts 'Wrong credentials'
     perform
-  end
-
-  def read_username
-    puts 'Enter username'
-    gets.chomp
-  end
-
-  def read_password
-    puts 'Enter password'
-    STDIN.noecho(&:gets)
   end
 end

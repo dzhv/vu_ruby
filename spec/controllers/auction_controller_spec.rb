@@ -3,8 +3,14 @@ require_relative('../../app/auction/auction_sale_info')
 require_relative('../../app/auction/item')
 
 describe AuctionController do
-  let(:auction_controller) { described_class.new }
-  let(:user_controller) { UserController.new }
+  let(:auction_controller) { described_class.new('test_auctions.yml') }
+  let(:user_controller) do
+    UserController.new(
+      'test_users.yml',
+      'test_auctions.yml',
+      'test_logins.yml'
+    )
+  end
   let(:user_data) do
     {
       name: 'name',
@@ -34,17 +40,35 @@ describe AuctionController do
     }
   end
 
-  it 'can handle auction creation' do
-    user_id = user_controller.sign_up(user_data, login_data).id
-    auction_controller.put_auction(user_id, auction_data)
-    auctions = auction_controller.get_auctions(user_id)
-    expect(auctions.first).to have_attributes(
-      user_id: user_id,
+  before(:each) do
+    @auctions_before = auction_controller.all_auctions
+    @user_id = user_controller.sign_up(user_data, login_data).id
+    auction_controller.put_auction(@user_id, auction_data)
+    @auction = auction_controller.get_auctions(@user_id).first
+  end
+
+  it 'can request auction creation' do
+    expect(@auction).to have_attributes(
+      user_id: @user_id,
       item: Item.new(auction_data[:item]),
       sale_info: AuctionSaleInfo.new(
         auction_data[:starting_price],
         auction_data[:buyout_price]
       )
     )
+  end
+
+  it 'can request all auctions' do
+    auctions = auction_controller.all_auctions
+    expect(auctions).to match_array(@auctions_before.concat([@auction]))
+  end
+
+  it 'can request auction by number' do
+    auction_controller.put_auction(@user_id, auction_data)
+    all_auctions = auction_controller.all_auctions
+    expected_auction = all_auctions.last
+    actual_auction =
+      auction_controller.get_auction_by_number(all_auctions.length - 1)
+    expect(actual_auction).to eq(expected_auction)
   end
 end

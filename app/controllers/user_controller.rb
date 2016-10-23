@@ -5,14 +5,14 @@ require_relative('../user/user_repository')
 require_relative('../auction/auction_repository')
 require_relative('../auction/auction_manager')
 
-# Handles frontend-backend calls related to user models
+# Handles frontend-backend calls related to user actions
 class UserController
-  def initialize
-    auction_manager = AuctionManager.new(AuctionRepository.new('auctions.yml'))
-    authentication = Authentication.new(AuthRepository.new('login.yml'))
-    user_repository = UserRepository.new('users.yml')
+  def initialize(user_file, auction_file, auth_file)
+    @auction_manager = AuctionManager.new(AuctionRepository.new(auction_file))
+    authentication = Authentication.new(AuthRepository.new(auth_file))
+    user_repository = UserRepository.new(user_file)
     @user_manager = UserManager.new(
-      auction_manager,
+      @auction_manager,
       user_repository,
       authentication
     )
@@ -24,5 +24,14 @@ class UserController
 
   def get_user(user_id)
     @user_manager.get_user(user_id)
+  end
+
+  def add_money(user_id, amount)
+    @user_manager.add_money(user_id, amount)
+  end
+
+  def place_bid(auction_number, user_id, bid_amount)
+    auction_id = @auction_manager.get_auction_by_number(auction_number).id
+    @user_manager.place_bid(user_id, auction_id, bid_amount)
   end
 end

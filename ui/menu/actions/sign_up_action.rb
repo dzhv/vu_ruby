@@ -1,9 +1,10 @@
 require 'io/console'
-
+require_relative('action')
 # Handles user sign up
-class SignUpAction
+class SignUpAction < Action
   def initialize(user_controller)
     @user_controller = user_controller
+    @name = 'Sign up'
   end
 
   def perform
@@ -26,15 +27,5 @@ class SignUpAction
       username: read_value('username'),
       password: read_password
     }
-  end
-
-  def read_value(value_name)
-    puts "Enter #{value_name}:"
-    gets.chomp
-  end
-
-  def read_password
-    puts 'Enter password'
-    STDIN.noecho(&:gets)
   end
 end

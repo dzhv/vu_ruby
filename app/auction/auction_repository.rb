@@ -23,6 +23,10 @@ class AuctionRepository
     all_auctions.find { |auct| auct.id == auction_id }
   end
 
+  def get_auction_by_number(number)
+    all_auctions[number]
+  end
+
   def all_auctions
     ensure_file_exists
     File.open(@file_name, 'r') do |file|

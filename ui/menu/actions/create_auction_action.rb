@@ -1,9 +1,9 @@
-require('date')
 # Action for creating an auction
-class CreateAuctionAction
+class CreateAuctionAction < Action
   def initialize(auction_controller, user_id)
     @auction_controller = auction_controller
     @user_id = user_id
+    @name = 'Create auction'
   end
 
   def perform
@@ -21,27 +21,6 @@ class CreateAuctionAction
       description: read_value('item description'),
       condition: read_integer('condition')
     }
-  end
-
-  def read_value(value_name)
-    puts "Enter #{value_name}"
-    gets.chomp
-  end
-
-  def read_integer(field_name)
-    puts "Enter #{field_name}"
-    return Integer(gets.chomp)
-  rescue ArgumentError
-    puts 'Value was not an integer, please retry'
-    read_integer(field_name)
-  end
-
-  def read_float(field_name)
-    puts "Enter #{field_name}"
-    return Float(gets.chomp)
-  rescue ArgumentError
-    puts 'Value was not a number, please retry'
-    read_float(field_name)
   end
 
   # def read_date(field_name)

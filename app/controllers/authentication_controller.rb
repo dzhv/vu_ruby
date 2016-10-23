@@ -3,9 +3,8 @@ require_relative('../authentication/auth_repository')
 
 # Handles frontend authentication requests
 class AuthController
-  def initialize
-    @file_name = 'login.yml'
-    @authentication = Authentication.new(AuthRepository.new(@file_name))
+  def initialize(repository_file)
+    @authentication = Authentication.new(AuthRepository.new(repository_file))
   end
 
   def authenticate(username, password)

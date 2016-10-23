@@ -1,4 +1,4 @@
-# i created this class because of reek
+# Represents auction sale info
 class AuctionSaleInfo
   def initialize(starting_price, buyout_price)
     @starting_price = starting_price

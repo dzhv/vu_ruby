@@ -21,9 +21,17 @@ class AuctionManager
     @auction_repository.get_auction(auction_id)
   end
 
+  def all_auctions
+    @auction_repository.all_auctions
+  end
+
   def place_bid(user_id, auction_id, bid_amount)
     auction = get_auction(auction_id)
     auction.place_bid(user_id, bid_amount)
     @auction_repository.save_auction(auction)
+  end
+
+  def get_auction_by_number(number)
+    @auction_repository.get_auction_by_number(number)
   end
 end

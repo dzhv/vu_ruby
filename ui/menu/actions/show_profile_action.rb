@@ -1,8 +1,10 @@
+require_relative('action')
 # Action for showing user profile
-class ShowProfileAction
+class ShowProfileAction < Action
   def initialize(user_controller, user_id)
     @user_controller = user_controller
     @user_id = user_id
+    @name = 'View my profile'
   end
 
   def perform

@@ -3,8 +3,14 @@ require_relative('../../app/controllers/user_controller')
 require('securerandom')
 
 describe AuthController do
-  let(:auth_controller) { described_class.new }
-  let(:user_controller) { UserController.new }
+  let(:auth_controller) { described_class.new('test_logins.yml') }
+  let(:user_controller) do
+    UserController.new(
+      'test_users.yml',
+      'test_auctions.yml',
+      'test_logins.yml'
+    )
+  end
   let(:user_data) do
     {
       name: 'name',

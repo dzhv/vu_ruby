@@ -1,5 +1,6 @@
-require_relative 'user'
+require_relative('user')
 require 'securerandom'
+require_relative('../errors/errors')
 
 # manages actions with system users
 class UserManager
@@ -32,7 +33,7 @@ class UserManager
 
   def place_bid(user_id, auction_id, amount)
     user = get_user(user_id)
-    raise Error.insufficient_funds if amount > user.account.balance
+    raise Errors.insufficient_funds if amount > user.account.balance
     auction = @auction_manager.get_auction(auction_id)
     handle_bid_transactions(user, auction, amount)
   end

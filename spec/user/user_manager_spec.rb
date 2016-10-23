@@ -101,6 +101,12 @@ describe UserManager do
     expect(overthrown_bidder.account.balance).to eq(100)
   end
 
+  # it 'does not allow to bid with a lower amount' do
+  # end
+
+  # it 'does not allow when insufficient funds' do
+  # end
+
   # it 'handles an auction buyout' do
   #   user = first_bidder
   #   user_manager.add_money(user.id, 200)
