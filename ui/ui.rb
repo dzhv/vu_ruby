@@ -3,6 +3,7 @@ require_relative('menu/user_menu')
 require_relative('user_session')
 require_relative('../app/controllers/user_controller')
 require_relative('../app/controllers/authentication_controller')
+require_relative('../app/controllers/auction_controller')
 
 # Controlls all the UI
 class UI
@@ -10,11 +11,16 @@ class UI
     @session = UserSession.empty
     @auth_controller = AuthController.new
     @user_controller = UserController.new
+    @auction_controller = AuctionController.new
   end
 
   def start_ui
     login
-    user_menu = UserMenu.new(@session.user_id, @user_controller)
+    user_menu = UserMenu.new(
+      @session.user_id,
+      @user_controller,
+      @auction_controller
+    )
     user_menu.show
   end
 

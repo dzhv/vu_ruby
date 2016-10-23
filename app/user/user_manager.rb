@@ -1,7 +1,7 @@
 require_relative 'user'
 require 'securerandom'
 
-# manages actionss with system users
+# manages actions with system users
 class UserManager
   def initialize(auction_manager, user_repository, authentication)
     @auction_manager = auction_manager

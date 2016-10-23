@@ -1,6 +1,7 @@
 require_relative('bid')
 require_relative('../errors/errors')
 require_relative('auction_sale_info')
+require_relative('item')
 
 # User created auction
 class Auction

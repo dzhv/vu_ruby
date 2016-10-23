@@ -11,4 +11,10 @@ class ContactInformation
   attr_reader :name
   attr_reader :email
   attr_reader :tel_no
+
+  def ==(other)
+    @name == other.name &&
+      @email == other.email &&
+      @tel_no == other.tel_no
+  end
 end

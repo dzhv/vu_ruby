@@ -7,9 +7,11 @@ class LoginMenu < BaseMenu
   def initialize(authentication_controller, user_controller)
     @actions = [
       -> { exit },
-      -> { login(authentication_controller) },
-      -> { sign_up(user_controller) }
+      -> { login },
+      -> { sign_up }
     ]
+    @login_action = LoginAction.new(authentication_controller)
+    @sign_up_action = SignUpAction.new(user_controller)
   end
 
   def show
@@ -19,12 +21,12 @@ class LoginMenu < BaseMenu
     @actions[read_input].call
   end
 
-  def login(authentication_controller)
-    LoginAction.new(authentication_controller).perform
+  def login
+    @login_action.perform
   end
 
-  def sign_up(user_controller)
-    SignUpAction.new(user_controller).perform
+  def sign_up
+    @sign_up_action.perform
     show
   end
 end

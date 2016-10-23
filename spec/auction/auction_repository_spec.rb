@@ -14,8 +14,7 @@ describe AuctionRepository do
     {
       item: item_data,
       starting_price: 100,
-      buyout_price: 150,
-      end_date: Date.parse('2016-12-24')
+      buyout_price: 150
     }
   end
   let(:user_id) { '0' }

@@ -21,4 +21,8 @@ class UserController
   def sign_up(user_data, login_data)
     @user_manager.sign_up(user_data, login_data)
   end
+
+  def get_user(user_id)
+    @user_manager.get_user(user_id)
+  end
 end
