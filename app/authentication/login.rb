@@ -6,10 +6,11 @@ class Login
     @password = password
   end
 
-  def ==(other)
-    @user_id == other.user_id
-  end
   attr_reader :user_id
   attr_reader :username
   attr_reader :password
+
+  def ==(other)
+    @user_id == other.user_id
+  end
 end

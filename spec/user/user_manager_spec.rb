@@ -66,7 +66,7 @@ describe UserManager do
     login = authentication.get_user_login(user.id)
     expect(login).to have_attributes(
       username: login_data[:username],
-      password: login_data[:password],
+      password: be_hashed(login_data[:password]),
       user_id: user.id
     )
   end

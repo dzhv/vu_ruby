@@ -1,3 +1,4 @@
+require_relative '../spec_helper'
 require_relative('../../app/authentication/auth_repository')
 require_relative('../../app/authentication/authentication')
 require 'securerandom'
@@ -8,10 +9,15 @@ describe Authentication do
   let(:authentication) { described_class.new(auth_repository) }
   let(:username) { SecureRandom.uuid }
   let(:password) { SecureRandom.uuid }
-  let(:user_id) { '1' }
+  let(:user_id) { SecureRandom.uuid }
 
   before(:each) do
     authentication.create_login(user_id, username, password)
+  end
+
+  it 'stores encrypted passwords' do
+    login = authentication.get_user_login(user_id)
+    expect(login.password).to be_hashed(password)
   end
 
   context 'when login is correct' do
