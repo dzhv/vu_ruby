@@ -5,7 +5,10 @@ require('securerandom')
 
 describe AuctionManager do
   let(:auction_repository) { AuctionRepository.new('test_auctions.yml') }
-  let(:auction_manager) { described_class.new(auction_repository) }
+  let(:auction_numerator) { AuctionNumerator.new(auction_repository) }
+  let(:auction_manager) do
+    described_class.new(auction_repository, auction_numerator)
+  end
   let(:item_data) do
     {
       name: 'item',
@@ -23,16 +26,24 @@ describe AuctionManager do
   let(:user1_id) { SecureRandom.uuid }
   let(:user2_id) { SecureRandom.uuid }
 
-  it 'can create auction' do
-    auction = auction_manager.create_auction(user1_id, auction_data)
+  context 'on auction creation' do
+    let(:auction) { auction_manager.create_auction(user1_id, auction_data) }
 
-    expect(auction).to have_attributes(
-      item: Item.new(auction_data[:item]),
-      sale_info: AuctionSaleInfo.new(
-        auction_data[:starting_price],
-        auction_data[:buyout_price]
+    it 'it creates appropriate auction' do
+      expect(auction).to have_attributes(
+        item: Item.new(auction_data[:item]),
+        sale_info: AuctionSaleInfo.new(
+          auction_data[:starting_price],
+          auction_data[:buyout_price]
+        )
       )
-    )
+    end
+    it 'gives auction a unique number' do
+      other_auction = auction_manager.create_auction(user1_id, auction_data)
+      expect(auction.identifier.number).not_to eq(
+        other_auction.identifier.number
+      )
+    end
   end
 
   context 'when auctions are retrieved' do
@@ -61,13 +72,14 @@ describe AuctionManager do
     end
 
     it 'can get auction by its number' do
-      number_of_auctions = auction_manager.all_auctions.length
-      auction = auction_manager.get_auction_by_number(number_of_auctions - 1)
-      expect(auction).to eq(auction3)
+      auction = auction_manager.get_auction_by_number(
+        auction1.identifier.number
+      )
+      expect(auction).to eq(auction1)
     end
 
     it 'does not retrieve bought auctions' do
-      auction_manager.buyout_auction(auction1.id)
+      auction_manager.buyout_auction(auction1.identifier.id)
       expect(auction_manager.all_auctions).not_to include(auction1)
     end
   end

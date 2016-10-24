@@ -20,17 +20,15 @@ class AuctionRepository
   end
 
   def get_auction(auction_id)
-    all_auctions.find { |auct| auct.id == auction_id }
+    all_auctions.find { |auct| auct.identifier.id == auction_id }
   end
 
   def get_auction_by_number(number)
-    all_open_auctions[number]
+    all_auctions.find { |auction| auction.identifier.number == number }
   end
 
   def all_open_auctions
-    all_auctions.select do |auction|
-      !auction.sale_info.bought
-    end
+    all_auctions.select(&:active?)
   end
 
   def all_auctions

@@ -4,21 +4,25 @@ class AuctionSaleInfo
     @starting_price = starting_price
     @buyout_price = buyout_price
     @current_bid = Bid.empty
-    @bought = false
+    @state = 'active'
   end
 
   attr_reader :starting_price
   attr_reader :buyout_price
   attr_reader :current_bid
-  attr_reader :bought
+  attr_reader :state
 
   def place_bid(new_bid)
     @current_bid = new_bid
   end
 
   def mark_as_bought
-    @bought = true
+    @state = 'bought'
     @current_bid = Bid.empty
+  end
+
+  def mark_as_closed
+    @state = 'closed'
   end
 
   def ==(other)

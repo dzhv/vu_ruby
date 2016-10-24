@@ -1,10 +1,12 @@
 require_relative('auction')
+require_relative('../errors/errors')
 require 'securerandom'
 
 # manages actions with system auctions
 class AuctionManager
-  def initialize(auction_repository)
+  def initialize(auction_repository, auction_numerator)
     @auction_repository = auction_repository
+    @auction_numerator = auction_numerator
   end
 
   def get_auctions(user_id)
@@ -13,7 +15,8 @@ class AuctionManager
 
   def create_auction(user_id, auction_data)
     id = SecureRandom.uuid
-    auction = Auction.new(id, user_id, auction_data)
+    number = @auction_numerator.next_number
+    auction = Auction.new(id, number, user_id, auction_data)
     @auction_repository.save_auction(auction)
   end
 
@@ -38,6 +41,15 @@ class AuctionManager
   def buyout_auction(auction_id)
     auction = get_auction(auction_id)
     auction.buyout
+    @auction_repository.save_auction(auction)
+  end
+
+  def close_auction(user_id, auction_id)
+    auction = get_auction(auction_id)
+    if auction.user_id != user_id
+      raise Errors::UnauthorizedError.new, 'Not allowed'
+    end
+    auction.close
     @auction_repository.save_auction(auction)
   end
 end

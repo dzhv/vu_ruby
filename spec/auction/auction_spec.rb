@@ -17,7 +17,7 @@ describe Auction do
       buyout_price: 150
     }
   end
-  let(:auction) { described_class.new('id1', 'uid1', auction_data) }
+  let(:auction) { described_class.new('id1', 0, 'uid1', auction_data) }
 
   it 'does not allow lower amount bids' do
     auction.place_bid('uid2', 200)

@@ -8,12 +8,12 @@ class GetAllAuctionsAction < Action
 
   def perform
     auctions = @auction_controller.all_auctions
-    auctions.each_with_index { |auction, index| print_auction(auction, index) }
+    auctions.each { |auction| print_auction(auction) }
   end
 
-  def print_auction(auction, index)
+  def print_auction(auction)
     puts '----------------------------------------'
-    puts "Auction ##{index}: "
+    puts "Auction ##{auction.identifier.number}: "
     print_auction_data(auction)
   end
 

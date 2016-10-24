@@ -9,7 +9,13 @@ require_relative '../../app/authentication/auth_repository'
 
 describe UserManager do
   let(:auction_repository) { AuctionRepository.new('test_auctions.yml') }
-  let(:auction_manager) { AuctionManager.new(auction_repository) }
+  let(:auction_numerator) { AuctionNumerator.new(auction_repository) }
+  let(:auction_manager) do
+    AuctionManager.new(
+      auction_repository,
+      auction_repository
+    )
+  end
   let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:user_manager) do
     described_class.new(auction_manager, user_repository, authentication)

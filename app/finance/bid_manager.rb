@@ -14,7 +14,7 @@ class BidManager
 
   def handle_bid_transactions(user, auction, bid_amount)
     current_bid = auction.sale_info.current_bid
-    @auction_manager.place_bid(user.id, auction.id, bid_amount)
+    @auction_manager.place_bid(user.id, auction.identifier.id, bid_amount)
     handle_user_finances(current_bid, user, bid_amount)
   end
 
@@ -42,7 +42,11 @@ class BidManager
   def handle_buyout_transactions(user, auction)
     auction_sale_info = auction.sale_info
     current_bid = auction_sale_info.current_bid
-    @auction_manager.buyout_auction(auction.id)
+    @auction_manager.buyout_auction(auction.identifier.id)
     handle_user_finances(current_bid, user, auction_sale_info.buyout_price)
+  end
+
+  def close_auction(user_id, auction_id)
+    @auction_manager.close_auction(user_id, auction_id)
   end
 end

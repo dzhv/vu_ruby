@@ -11,7 +11,10 @@ require_relative '../../app/errors/errors'
 
 describe BidManager do
   let(:auction_repository) { AuctionRepository.new('test_auctions.yml') }
-  let(:auction_manager) { AuctionManager.new(auction_repository) }
+  let(:auction_numerator) { AuctionNumerator.new(auction_repository) }
+  let(:auction_manager) do
+    AuctionManager.new(auction_repository, auction_numerator)
+  end
   let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:user_manager) do
     UserManager.new(auction_manager, user_repository, authentication)
@@ -58,7 +61,7 @@ describe BidManager do
   before(:each) do
     user_manager.add_money(first_bidder.id, 100)
     user_manager.add_money(second_bidder.id, 200)
-    bid_manager.place_bid(first_bidder.id, auction.id, 50)
+    bid_manager.place_bid(first_bidder.id, auction.identifier.id, 50)
   end
 
   context 'on first auction bid' do
@@ -68,7 +71,7 @@ describe BidManager do
     end
 
     it 'places the bid on auction' do
-      bidded_auction = auction_manager.get_auction(auction.id)
+      bidded_auction = auction_manager.get_auction(auction.identifier.id)
       expect(bidded_auction.sale_info.current_bid).to have_attributes(
         user_id: first_bidder.id,
         amount: 50
@@ -77,7 +80,7 @@ describe BidManager do
   end
 
   it 'returns money for overthrown bidder' do
-    bid_manager.place_bid(second_bidder.id, auction.id, 200)
+    bid_manager.place_bid(second_bidder.id, auction.identifier.id, 200)
 
     overthrown_bidder = user_manager.get_user(first_bidder.id)
     expect(overthrown_bidder.account.balance).to eq(100)
@@ -86,7 +89,7 @@ describe BidManager do
   context 'on auction buyout' do
     let(:buyer) { second_bidder }
     before(:each) do
-      bid_manager.handle_buyout(buyer.id, auction.id)
+      bid_manager.handle_buyout(buyer.id, auction.identifier.id)
     end
 
     it 'reduces buyer\'s balance' do
@@ -95,8 +98,8 @@ describe BidManager do
     end
 
     it 'marks auction as bought' do
-      actual_auction = auction_manager.get_auction(auction.id)
-      expect(actual_auction.sale_info.bought).to be true
+      actual_auction = auction_manager.get_auction(auction.identifier.id)
+      expect(actual_auction.sale_info.state).to eq('bought')
     end
   end
 
@@ -104,7 +107,31 @@ describe BidManager do
     buyer = user_manager.sign_up(user_data, login_data)
     user_manager.add_money(buyer.id, 100)
     expect do
-      bid_manager.handle_buyout(buyer.id, auction.id)
+      bid_manager.handle_buyout(buyer.id, auction.identifier.id)
     end.to raise_error(Errors.insufficient_funds)
+  end
+
+  context 'on auction close' do
+    it 'allows user to close an auction' do
+      auction = auction_manager.create_auction(auction_owner.id, auction_data)
+      bid_manager.close_auction(auction_owner.id, auction.identifier.id)
+      closed_auction = auction_manager.get_auction(auction.identifier.id)
+      expect(closed_auction).to be_closed
+    end
+
+    it 'does not allow to close other people auctions' do
+      user = first_bidder
+      expect do
+        bid_manager.close_auction(user.id, auction.identifier.id)
+      end.to raise_error(Errors::UnauthorizedError)
+    end
+
+    it 'does not allow to close a bidded auction' do
+      user_manager.add_money(first_bidder.id, 100)
+      bid_manager.place_bid(first_bidder.id, auction.identifier.id, 50)
+      expect do
+        bid_manager.close_auction(auction_owner.id, auction.identifier.id)
+      end.to raise_error(Errors::NotAllowedError)
+    end
   end
 end

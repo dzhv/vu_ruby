@@ -14,7 +14,7 @@ class GetAuctionsAction < Action
 
   def print_auction(auction)
     puts '----------------------------------------'
-    puts 'Auction:'
+    puts "Auction ##{auction.identifier.number}:"
     print_auction_data(auction)
   end
 

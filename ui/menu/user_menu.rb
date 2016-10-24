@@ -6,6 +6,7 @@ require_relative('actions/add_money_action')
 require_relative('actions/get_all_auctions_action')
 require_relative('actions/bid_action')
 require_relative('actions/buyout_action')
+require_relative('actions/close_action')
 
 # Available actions for a user
 class UserMenu < BaseMenu
@@ -29,7 +30,8 @@ class UserMenu < BaseMenu
       CreateAuctionAction.new(@auction_controller, @user_id),
       GetAllAuctionsAction.new(@auction_controller),
       BidAction.new(@user_controller, @user_id),
-      BuyoutAction.new(@user_controller, @user_id)
+      BuyoutAction.new(@user_controller, @user_id),
+      CloseAction.new(@user_controller, @user_id)
     ]
   end
 

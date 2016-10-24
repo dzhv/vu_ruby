@@ -19,4 +19,12 @@ class Errors
   # Wrong credentials entered exception
   class WrongCredentialsError < Error
   end
+
+  # Exception for unauthorized actions
+  class UnauthorizedError < Error
+  end
+
+  # Exception for not allowed actions
+  class NotAllowedError < Error
+  end
 end

@@ -24,7 +24,10 @@ describe User do
     }
   end
   let(:auction_repository) { AuctionRepository.new('test_auctiions.yml') }
-  let(:auction_manager) { AuctionManager.new(auction_repository) }
+  let(:auction_numerator) { AuctionNumerator.new(auction_repository) }
+  let(:auction_manager) do
+    AuctionManager.new(auction_repository, auction_numerator)
+  end
   let(:user_repository) { UserRepository.new('test_users.yml') }
   let(:authentication) do
     Authentication.new(AuthRepository.new('test_login.yml'))

@@ -18,7 +18,7 @@ describe AuctionRepository do
     }
   end
   let(:user_id) { '0' }
-  let(:auction) { Auction.new('0', user_id, auction_data) }
+  let(:auction) { Auction.new('0', 0, user_id, auction_data) }
 
   before(:each) do
     File.delete(file_name) if File.exist?(file_name)
