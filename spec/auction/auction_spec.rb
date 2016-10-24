@@ -29,6 +29,6 @@ describe Auction do
   it 'removes current bid on buyout' do
     auction.place_bid('uid2', 200)
     auction.buyout
-    expect(auction.sale_info.current_bid).to eq(Bid.empty)
+    expect(auction).not_to have_bid
   end
 end
