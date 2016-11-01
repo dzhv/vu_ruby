@@ -65,11 +65,9 @@ describe AuctionController do
   end
 
   it 'can request auction by number' do
-    auction_controller.put_auction(user_id, auction_data)
-    all_auctions = auction_controller.all_auctions
-    expected_auction = all_auctions.last
+    auction = auction_controller.put_auction(user_id, auction_data)
     actual_auction =
-      auction_controller.get_auction_by_number(all_auctions.length - 1)
-    expect(actual_auction).to eq(expected_auction)
+      auction_controller.get_auction_by_number(auction.identifier.number)
+    expect(actual_auction).to eq(auction)
   end
 end

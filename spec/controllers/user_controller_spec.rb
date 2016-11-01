@@ -45,7 +45,6 @@ describe UserController do
   before(:each) do
     user_controller.add_money(user.id, increase_amount)
     auction_controller.put_auction(user.id, auction_data)
-    auction_controller.put_auction(user.id, auction_data)
   end
 
   it 'allows user to get his profile' do
@@ -65,7 +64,8 @@ describe UserController do
   end
 
   it 'initiates bid placement' do
-    auction_number = auction_controller.all_auctions.first.identifier.number
+    auction = auction_controller.put_auction(user.id, auction_data)
+    auction_number = auction.identifier.number
     user_controller.place_bid(auction_number, user.id, 100)
     auction = auction_controller.get_auction_by_number(auction_number)
     expect(auction.sale_info.current_bid).to have_attributes(
@@ -75,14 +75,16 @@ describe UserController do
   end
 
   it 'initiates buyout' do
-    auction_number = auction_controller.all_auctions.first.identifier.number
+    auction = auction_controller.put_auction(user.id, auction_data)
+    auction_number = auction.identifier.number
     auction = auction_controller.get_auction_by_number(auction_number)
     user_controller.buyout_auction(auction_number, user.id)
     expect(auction_controller.all_auctions).not_to include(auction)
   end
 
   it 'initiates auction close' do
-    auction_number = auction_controller.all_auctions.last.identifier.number
+    auction = auction_controller.put_auction(user.id, auction_data)
+    auction_number = auction.identifier.number
     user_controller.close_auction(auction_number, user.id)
     auction = auction_controller.get_auction_by_number(auction_number)
     expect(auction.active?).to be false

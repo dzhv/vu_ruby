@@ -1,0 +1,21 @@
+---
+- !ruby/object:User
+  id: 126cf668-2148-4560-b9a7-69447807e7ab
+  contact_info: !ruby/object:ContactInformation
+    name: !ruby/object:UserName
+      first_name: override_name
+      last_name: override_surname
+    email: email
+    tel_no: telephone
+  account: !ruby/object:Account
+    balance: 0
+- !ruby/object:User
+  id: 492ad638-0548-40b0-b9a7-69597807e7ab
+  contact_info: !ruby/object:ContactInformation
+    name: !ruby/object:UserName
+      first_name: name
+      last_name: surname
+    email: email
+    tel_no: telephone
+  account: !ruby/object:Account
+    balance: 0

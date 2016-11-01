@@ -1,6 +1,7 @@
 require_relative '../spec_helper'
 require_relative '../../app/auction/auction_manager'
 require_relative '../../app/auction/auction_repository'
+require_relative '../../app/auction/auction_numerator'
 require('securerandom')
 
 describe AuctionManager do

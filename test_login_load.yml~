@@ -1,0 +1,9 @@
+---
+- !ruby/object:Login
+  user_id: 60c376f6-3681-4a87-b070-be3fd9b280e4
+  username: 7c0b2f73-0558-4472-bcd9-f0a6773b5b49
+  password: e69e4398-1ec9-4bf4-811e-c934d2836ae2
+- !ruby/object:Login
+  user_id: 6be49d15-608d-479a-9180-25d568f530a0
+  username: d696b9d0-ca76-4940-8e00-9cccb1aa6c80
+  password: efdc969c-0332-4e99-b8a8-16281c08aa94

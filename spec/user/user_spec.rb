@@ -4,6 +4,7 @@ require_relative '../../app/finance/account'
 require_relative '../../app/auction/auction'
 require_relative '../../app/auction/item'
 require_relative '../../app/auction/auction_repository'
+require_relative '../../app/auction/auction_numerator'
 require_relative '../../app/authentication/authentication'
 require_relative '../../app/authentication/auth_repository'
 require('date')
